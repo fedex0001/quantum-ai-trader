@@ -13,8 +13,10 @@ export function DashboardLayout({ children }: LayoutProps) {
       <DashboardHeader />
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />
-        <main className="flex-1 overflow-auto p-4">
-          {children}
+        <main className="flex-1 overflow-auto p-4 md:p-6 bg-background">
+          <div className="container mx-auto max-w-7xl">
+            {children}
+          </div>
         </main>
       </div>
     </div>
