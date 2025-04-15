@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/sonner";
-import { Play, Pause, Power, PowerOff, AlertTriangle, Zap, Lock, Shield, Eye, ChevronsUp, ChevronsDown } from "lucide-react";
+import { Play, Pause, PowerOff, AlertTriangle, Zap, Lock, Shield, Eye, ChevronsUp, ChevronsDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface Agent {
@@ -65,8 +65,8 @@ export function HumanControlPanel() {
         latency: 0,
       });
       
-      toast("System stopped", {
-        description: "All AI agents have been shut down.",
+      toast("Sistema fermato", {
+        description: "Tutti gli agenti AI sono stati spenti.",
         icon: <PowerOff className="h-4 w-4" />,
       });
     } else {
@@ -93,8 +93,8 @@ export function HumanControlPanel() {
         });
       }, 2000);
       
-      toast("System started", {
-        description: "All AI agents are now running.",
+      toast("Sistema avviato", {
+        description: "Tutti gli agenti AI sono ora in esecuzione.",
         icon: <Zap className="h-4 w-4" />,
       });
     }
@@ -118,7 +118,7 @@ export function HumanControlPanel() {
               "h-3 w-3 rounded-full",
               systemRunning ? "bg-green-500" : "bg-gray-300"
             )} />
-            <CardTitle className="text-base">Human Control Panel</CardTitle>
+            <CardTitle className="text-base">Pannello di Controllo Umano</CardTitle>
           </div>
           <Button variant="ghost" size="icon" onClick={(e) => {
             e.stopPropagation();
@@ -130,9 +130,9 @@ export function HumanControlPanel() {
         {!expanded && (
           <div className="flex items-center gap-2 mt-1">
             <Badge variant={systemRunning ? "default" : "outline"}>
-              {systemRunning ? "System Running" : "System Stopped"}
+              {systemRunning ? "Sistema Attivo" : "Sistema Spento"}
             </Badge>
-            <Badge variant="outline">{systemHealth.agentsOnline}/7 Agents Online</Badge>
+            <Badge variant="outline">{systemHealth.agentsOnline}/7 Agenti Attivi</Badge>
           </div>
         )}
       </CardHeader>
@@ -143,9 +143,9 @@ export function HumanControlPanel() {
             <div className="flex justify-between items-center mt-2">
               <div className="flex items-center gap-2">
                 {systemRunning ? (
-                  <Badge variant="default" className="bg-green-500">System Running</Badge>
+                  <Badge variant="default" className="bg-green-500">Sistema Attivo</Badge>
                 ) : (
-                  <Badge variant="outline">System Stopped</Badge>
+                  <Badge variant="outline">Sistema Spento</Badge>
                 )}
               </div>
               <Button 
@@ -156,12 +156,12 @@ export function HumanControlPanel() {
                 {systemRunning ? (
                   <>
                     <Pause className="mr-1 h-4 w-4" />
-                    Stop System
+                    Ferma Sistema
                   </>
                 ) : (
                   <>
                     <Play className="mr-1 h-4 w-4" />
-                    Start System
+                    Avvia Sistema
                   </>
                 )}
               </Button>
@@ -172,14 +172,14 @@ export function HumanControlPanel() {
                 <div className="grid grid-cols-2 gap-2">
                   <div className="space-y-1">
                     <div className="flex justify-between text-sm">
-                      <span>CPU Usage</span>
+                      <span>Utilizzo CPU</span>
                       <span>{systemHealth.cpuUsage}%</span>
                     </div>
                     <Progress value={systemHealth.cpuUsage} />
                   </div>
                   <div className="space-y-1">
                     <div className="flex justify-between text-sm">
-                      <span>Memory</span>
+                      <span>Memoria</span>
                       <span>{systemHealth.memoryUsage}%</span>
                     </div>
                     <Progress value={systemHealth.memoryUsage} />
@@ -188,15 +188,15 @@ export function HumanControlPanel() {
                 
                 <div className="grid grid-cols-3 gap-2 text-sm">
                   <div className="flex flex-col items-center bg-muted/30 rounded p-2">
-                    <span className="text-muted-foreground">Agents</span>
+                    <span className="text-muted-foreground">Agenti</span>
                     <span className="text-lg font-medium">{systemHealth.agentsOnline}/7</span>
                   </div>
                   <div className="flex flex-col items-center bg-muted/30 rounded p-2">
-                    <span className="text-muted-foreground">Tasks</span>
+                    <span className="text-muted-foreground">Attività</span>
                     <span className="text-lg font-medium">{systemHealth.activeTasks}</span>
                   </div>
                   <div className="flex flex-col items-center bg-muted/30 rounded p-2">
-                    <span className="text-muted-foreground">Latency</span>
+                    <span className="text-muted-foreground">Latenza</span>
                     <span className="text-lg font-medium">{systemHealth.latency}ms</span>
                   </div>
                 </div>
@@ -207,11 +207,10 @@ export function HumanControlPanel() {
             
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <h4 className="text-sm font-medium">AI Agents</h4>
+                <h4 className="text-sm font-medium">Agenti AI</h4>
                 <div className="flex items-center gap-1">
-                  <Power className="h-3 w-3 text-muted-foreground" />
                   <span className="text-xs text-muted-foreground">
-                    {agents.filter(a => a.status === "online").length}/{agents.length} Online
+                    {agents.filter(a => a.status === "online").length}/{agents.length} Attivi
                   </span>
                 </div>
               </div>
@@ -226,11 +225,10 @@ export function HumanControlPanel() {
                     <div className="flex items-center gap-2">
                       {systemRunning && agent.status === "online" && (
                         <span className="text-xs text-muted-foreground">
-                          {agent.tasks} tasks
+                          {agent.tasks} attività
                         </span>
                       )}
                       <Switch
-                        size="sm"
                         checked={agent.status === "online"}
                         disabled={!systemRunning}
                         className="scale-75 origin-right"
@@ -244,16 +242,16 @@ export function HumanControlPanel() {
           <CardFooter className="flex justify-between pt-0">
             <div className="flex items-center text-xs text-muted-foreground">
               <Shield className="h-3 w-3 mr-1" />
-              Human override available
+              Override umano disponibile
             </div>
             <div className="flex gap-1">
               <Button variant="outline" size="sm" disabled={!systemRunning}>
                 <Eye className="h-3 w-3 mr-1" />
-                Monitor
+                Monitora
               </Button>
               <Button variant="destructive" size="sm" disabled={!systemRunning}>
                 <AlertTriangle className="h-3 w-3 mr-1" />
-                Emergency Stop
+                Stop Emergenza
               </Button>
             </div>
           </CardFooter>
