@@ -1,11 +1,10 @@
-
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { DashboardLayout } from "@/components/dashboard/Layout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { AlertTriangle, Plus, Settings, Search, Filter, Trash2, RefreshCw, Loader2 } from "lucide-react";
+import { AlertTriangle, Plus, Settings, Search, Filter, Trash2, RefreshCw, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
@@ -32,8 +31,7 @@ import {
   PaginationContent,
   PaginationItem,
   PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
+  PaginationEllipsis,
 } from "@/components/ui/pagination";
 
 import { usePagination } from "@/hooks/usePagination";
@@ -56,7 +54,6 @@ export default function AlertsPage() {
   
   const queryClient = useQueryClient();
 
-  // Interrogazione per recuperare gli alert
   const { 
     data, 
     isLoading, 
@@ -79,7 +76,6 @@ export default function AlertsPage() {
     staleTime: 30000, // 30 secondi
   });
 
-  // Hook di paginazione personalizzato
   const pagination = usePagination({
     totalItems: data?.totalCount || 0,
     onPageChange: () => {
@@ -90,7 +86,6 @@ export default function AlertsPage() {
     }
   });
 
-  // Mutazione per eliminare un alert
   const deleteMutation = useMutation({
     mutationFn: deleteAlert,
     onSuccess: () => {
@@ -104,7 +99,6 @@ export default function AlertsPage() {
     }
   });
 
-  // Mutazione per aggiornare lo stato di un alert
   const updateStatusMutation = useMutation({
     mutationFn: (params: { id: number; isActive: boolean }) => {
       return updateAlert(params.id, { status: params.isActive ? "Active" : "Inactive" });
@@ -119,7 +113,6 @@ export default function AlertsPage() {
     }
   });
 
-  // Mutazione per testare un alert
   const triggerAlertMutation = useMutation({
     mutationFn: triggerAlert,
     onSuccess: () => {
@@ -132,7 +125,6 @@ export default function AlertsPage() {
     }
   });
 
-  // Gestori degli eventi
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
@@ -183,7 +175,6 @@ export default function AlertsPage() {
     }
   };
 
-  // Gestione della paginazione
   const renderPaginationItems = () => {
     const items = [];
     const maxItems = Math.min(5, pagination.totalPages);
@@ -240,7 +231,6 @@ export default function AlertsPage() {
           </div>
         </div>
 
-        {/* Filtri e ricerca */}
         <div className="flex flex-col md:flex-row gap-4 items-center">
           <div className="relative flex-1">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -383,7 +373,6 @@ export default function AlertsPage() {
               </Table>
             )}
 
-            {/* Paginazione */}
             {data && data.totalCount > 0 && (
               <div className="mt-4 flex items-center justify-between">
                 <div className="text-sm text-muted-foreground">
@@ -392,17 +381,43 @@ export default function AlertsPage() {
                 <Pagination>
                   <PaginationContent>
                     <PaginationItem>
-                      <PaginationPrevious 
-                        onClick={() => pagination.goToPreviousPage()} 
-                        disabled={pagination.currentPage === 1}
-                      />
+                      {pagination.currentPage > 1 ? (
+                        <PaginationLink onClick={() => pagination.goToPreviousPage()}>
+                          <ChevronLeft className="h-4 w-4 mr-1" />
+                          <span>Previous</span>
+                        </PaginationLink>
+                      ) : (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-9 gap-1 pl-2.5 opacity-50"
+                          disabled
+                        >
+                          <ChevronLeft className="h-4 w-4" />
+                          <span>Previous</span>
+                        </Button>
+                      )}
                     </PaginationItem>
+                    
                     {renderPaginationItems()}
+                    
                     <PaginationItem>
-                      <PaginationNext 
-                        onClick={() => pagination.goToNextPage()} 
-                        disabled={pagination.currentPage === pagination.totalPages}
-                      />
+                      {pagination.currentPage < pagination.totalPages ? (
+                        <PaginationLink onClick={() => pagination.goToNextPage()}>
+                          <span>Next</span>
+                          <ChevronRight className="h-4 w-4 ml-1" />
+                        </PaginationLink>
+                      ) : (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-9 gap-1 pr-2.5 opacity-50"
+                          disabled
+                        >
+                          <span>Next</span>
+                          <ChevronRight className="h-4 w-4" />
+                        </Button>
+                      )}
                     </PaginationItem>
                   </PaginationContent>
                 </Pagination>
@@ -412,7 +427,6 @@ export default function AlertsPage() {
         </Card>
       </div>
 
-      {/* Dialog di conferma eliminazione */}
       <AlertDialog open={alertToDelete !== null} onOpenChange={(open) => !open && setAlertToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
